@@ -1,0 +1,95 @@
+app:
+  eureka-hostname: localhost
+  eureka-port: 8761
+  database-hostname: localhost
+  database-port: 5435
+  database-name: payment_service
+  server-port: 8085
+  application-name: payment_service
+  kafka-hostname: localhost
+  kafka-port: 9092
+  kafka-default-topic: notificationTopic
+  kafka-concurrency: 3
+  kafka-group-id: notificationId
+  inventory-client-host: localhost
+  inventory-client-port: 8083
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${app.eureka-hostname}:${app.eureka-port}/eureka
+    registry-fetch-interval-seconds: 5
+  instance:
+    lease-renewal-interval-in-seconds: 5
+
+spring:
+  application:
+    name: ${app.application-name}
+  flyway:
+    baseline-on-migrate: true
+    baseline-version: 0.0
+    locations: classpath:db/migration/
+    validate-on-migrate: true
+    enabled: true
+    table: schema_history
+  kafka:
+    enabled: true
+    bootstrap-servers: ${app.kafka-hostname}:${app.kafka-port}
+    template:
+      default-topic: ${app.kafka-default-topic}
+    producers:
+      order-pending:
+        topic-name: order-pending
+    consumers:
+      order-item-not-available:
+        topic-name: order-item-not-available
+        group-id: order-item-not-available
+        properties:
+          concurrency: ${app.kafka-concurrency}
+      order-processing:
+        topic-name: order-processing
+        group-id: order-processing
+        properties:
+          concurrency: ${app.kafka-concurrency}
+
+  #    producer:
+  #      properties:
+
+  datasource:
+    url: jdbc:postgresql://${app.database-hostname}:${app.database-port}/${app.database-name}
+    username: postgres
+    password: secret
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+server:
+  port: ${app.server-port}
+
+logging:
+  level:
+    root: INFO
+
+feign:
+  client:
+    enabled: true
+    config:
+      inventory-client:
+        name: inventory-client
+        url: http://${app.inventory-client-host}:${app.inventory-client-port}
+
