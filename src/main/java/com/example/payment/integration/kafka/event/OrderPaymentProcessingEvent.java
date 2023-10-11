@@ -9,28 +9,16 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class OrderProcessingEvent implements Serializable {
+public class OrderPaymentProcessingEvent implements Serializable {
     static final long serialVersionUID = 12346L;
 
     Long orderId;
     String accountNumber;
-    List<OrderProcessingItem> orderProcessingItemList;
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @FieldDefaults(level = AccessLevel.PRIVATE)
-    @Builder
-    public static class OrderProcessingItem {
-        Long productId;
-        Integer orderQuantity;
-        BigDecimal productPrice;
-    }
+    BigDecimal totalAmount;
 }
