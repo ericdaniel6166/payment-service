@@ -1,7 +1,9 @@
 package com.example.payment.integration.kafka;
 
 import com.example.payment.integration.kafka.event.OrderProcessingEvent;
+import com.example.payment.service.PaymentService;
 import com.example.springbootmicroservicesframework.kafka.event.Event;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class KafkaConsumer {
 
     final ModelMapper modelMapper;
+    final PaymentService paymentService;
 
 
     @KafkaListener(topics = "${spring.kafka.consumers.order-processing.topic-name}",
@@ -24,9 +27,10 @@ public class KafkaConsumer {
             containerFactory = "orderProcessingKafkaListenerContainerFactory",
             concurrency = "${spring.kafka.consumers.order-processing.properties.concurrency}"
     )
-    public void handleOrderProcessing(Event kafkaEvent) {
+    public void handleOrderProcessing(Event kafkaEvent) throws JsonProcessingException {
         var orderProcessingEvent = modelMapper.map(kafkaEvent.getPayload(), OrderProcessingEvent.class);
         log.info("handle orderProcessingEvent {}", orderProcessingEvent);
+        paymentService.handleOrderProcessingEvent(orderProcessingEvent);
     }
 
 }
