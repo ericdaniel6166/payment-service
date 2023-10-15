@@ -30,22 +30,19 @@ public class PaymentServiceImpl implements PaymentService {
 
     final PaymentRepository paymentRepository;
     final PaymentStatusHistoryRepository paymentStatusHistoryRepository;
-
     final KafkaTemplate<String, Object> kafkaTemplate;
-
     final KafkaProducerProperties kafkaProducerProperties;
-
     final ObjectMapper objectMapper;
 
     @Transactional
     @Override
     public void handleOrderProcessingEvent(OrderProcessingEvent event) throws JsonProcessingException {
-        var totalAmount = BigDecimal.ZERO;
-        for (var a : event.getOrderProcessingItemList()) {
-            totalAmount = totalAmount.add(a.getProductPrice().multiply(BigDecimal.valueOf(a.getOrderQuantity())));
-        }
-        String paymentDetail = objectMapper.writeValueAsString(event);
-        Payment payment = Payment.builder()
+        var totalAmount = event.getOrderProcessingItemList().stream()
+                .map(item -> item.getProductPrice().multiply(BigDecimal.valueOf(item.getOrderQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        var paymentDetail = objectMapper.writeValueAsString(event);
+        var payment = Payment.builder()
                 .orderId(event.getOrderId())
                 .status(PaymentStatus.PAYMENT_PROCESSING.name())
                 .totalAmount(totalAmount)
