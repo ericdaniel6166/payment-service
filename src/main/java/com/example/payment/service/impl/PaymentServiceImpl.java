@@ -37,7 +37,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     @Override
     public void handleOrderProcessingEvent(OrderProcessingEvent event) throws JsonProcessingException {
-        var totalAmount = event.getOrderProcessingItemList().stream()
+        var totalAmount = event.getItemList().stream()
                 .map(item -> item.getProductPrice().multiply(BigDecimal.valueOf(item.getOrderQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
