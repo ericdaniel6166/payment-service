@@ -1,5 +1,8 @@
 package com.example.payment.service.impl;
 
+import com.example.payment.dto.OrderProcessingRequest;
+import com.example.payment.dto.OrderProcessingResponse;
+import com.example.payment.enums.OrderStatus;
 import com.example.payment.enums.PaymentStatus;
 import com.example.payment.integration.kafka.config.KafkaProducerProperties;
 import com.example.payment.integration.kafka.event.OrderPaymentProcessingEvent;
@@ -36,11 +39,37 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Transactional
     @Override
+    public OrderProcessingResponse handleOrderProcessingOpenFeign(OrderProcessingRequest request) throws JsonProcessingException {
+        var totalAmount = request.getItemList().stream()
+                .map(item -> item.getProductPrice().multiply(BigDecimal.valueOf(item.getOrderQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        var paymentDetail = objectMapper.writeValueAsString(request);
+        var payment = Payment.builder()
+                .orderId(request.getOrderId())
+                .status(PaymentStatus.PAYMENT_PROCESSING.name())
+                .totalAmount(totalAmount)
+                .paymentDetail(paymentDetail)
+                .build();
+        paymentRepository.saveAndFlush(payment);
+        paymentStatusHistoryRepository.saveAndFlush(PaymentStatusHistory.builder()
+                .paymentId(payment.getId())
+                .paymentDetail(paymentDetail)
+                .status(PaymentStatus.PAYMENT_PROCESSING.name())
+                .build());
+        return OrderProcessingResponse.builder()
+                .totalAmount(totalAmount)
+                .accountNumber(request.getAccountNumber())
+                .orderId(request.getOrderId())
+                .orderStatus(OrderStatus.PAYMENT_PROCESSING)
+                .build();
+    }
+
+    @Transactional
+    @Override
     public void handleOrderProcessingEvent(OrderProcessingEvent event) throws JsonProcessingException {
         var totalAmount = event.getItemList().stream()
                 .map(item -> item.getProductPrice().multiply(BigDecimal.valueOf(item.getOrderQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
         var paymentDetail = objectMapper.writeValueAsString(event);
         var payment = Payment.builder()
                 .orderId(event.getOrderId())
@@ -54,8 +83,6 @@ public class PaymentServiceImpl implements PaymentService {
                 .paymentDetail(paymentDetail)
                 .status(PaymentStatus.PAYMENT_PROCESSING.name())
                 .build());
-
-
         var paymentProcessingEvent = OrderPaymentProcessingEvent.builder()
                 .accountNumber(event.getAccountNumber())
                 .orderId(event.getOrderId())
