@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 
-@Table(name = "payment_status_history")
+@Table(name = "PAYMENT_STATUS_HISTORY")
 @Entity
 @Data
 @Builder
@@ -24,16 +24,16 @@ import lombok.NoArgsConstructor;
 public class PaymentStatusHistory extends BaseEntity<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "payment_id", nullable = false)
+    @Column(name = "PAYMENT_ID", nullable = false)
     private Long paymentId;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "STATUS", nullable = false)
     private String status;
 
-    @Column(name = "payment_detail", columnDefinition = "TEXT")
+    @Column(name = "PAYMENT_DETAIL", columnDefinition = "TEXT")
     private String paymentDetail;
 
 }
