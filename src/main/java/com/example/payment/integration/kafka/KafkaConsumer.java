@@ -2,7 +2,7 @@ package com.example.payment.integration.kafka;
 
 import com.example.payment.integration.kafka.event.OrderProcessingEvent;
 import com.example.payment.service.PaymentService;
-import com.example.springbootmicroservicesframework.kafka.event.Event;
+import com.example.springbootmicroservicesframework.integration.kafka.event.Event;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

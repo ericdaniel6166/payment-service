@@ -12,7 +12,7 @@ import com.example.payment.model.PaymentStatusHistory;
 import com.example.payment.repository.PaymentRepository;
 import com.example.payment.repository.PaymentStatusHistoryRepository;
 import com.example.payment.service.PaymentService;
-import com.example.springbootmicroservicesframework.kafka.event.Event;
+import com.example.springbootmicroservicesframework.integration.kafka.event.Event;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;

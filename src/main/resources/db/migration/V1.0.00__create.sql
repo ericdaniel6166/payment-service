@@ -1,38 +1,38 @@
 BEGIN;
 
-CREATE TABLE payment
+CREATE TABLE PAYMENT
 (
-    id                 BIGSERIAL
+    ID                 BIGSERIAL
         PRIMARY KEY,
-    order_id           BIGINT         NOT NULL,
-    total_amount       NUMERIC(19, 4) NOT NULL,
-    status             VARCHAR(255)   NOT NULL,
-    payment_detail     TEXT,
-    created_by         VARCHAR(255),
-    created_date       TIMESTAMP(6),
-    last_modified_by   VARCHAR(255),
-    last_modified_date TIMESTAMP(6)
+    ORDER_ID           BIGINT         NOT NULL,
+    TOTAL_AMOUNT       NUMERIC(19, 4) NOT NULL,
+    STATUS             VARCHAR(255)   NOT NULL,
+    PAYMENT_DETAIL     TEXT,
+    CREATED_BY         VARCHAR(255),
+    CREATED_DATE       TIMESTAMP(6),
+    LAST_MODIFIED_BY   VARCHAR(255),
+    LAST_MODIFIED_DATE TIMESTAMP(6)
 );
 
-CREATE UNIQUE INDEX payment_order_id_uindex ON payment (order_id);
+CREATE UNIQUE INDEX PAYMENT_ORDER_ID_UINDEX ON PAYMENT (ORDER_ID);
 
-CREATE TABLE payment_status_history
+CREATE TABLE PAYMENT_STATUS_HISTORY
 (
-    id                 BIGSERIAL
+    ID                 BIGSERIAL
         PRIMARY KEY,
-    payment_id         BIGINT       NOT NULL,
-    status             VARCHAR(255) NOT NULL,
-    payment_detail     TEXT,
-    created_by         VARCHAR(255),
-    created_date       TIMESTAMP(6),
-    last_modified_by   VARCHAR(255),
-    last_modified_date TIMESTAMP(6)
+    PAYMENT_ID         BIGINT       NOT NULL,
+    STATUS             VARCHAR(255) NOT NULL,
+    PAYMENT_DETAIL     TEXT,
+    CREATED_BY         VARCHAR(255),
+    CREATED_DATE       TIMESTAMP(6),
+    LAST_MODIFIED_BY   VARCHAR(255),
+    LAST_MODIFIED_DATE TIMESTAMP(6)
 );
 
-ALTER TABLE payment_status_history
-    OWNER TO postgres;
+ALTER TABLE PAYMENT_STATUS_HISTORY
+    OWNER TO POSTGRES;
 
-CREATE INDEX payment_status_history_payment_id_index
-    ON payment_status_history (payment_id);
+CREATE INDEX PAYMENT_STATUS_HISTORY_PAYMENT_ID_INDEX
+    ON PAYMENT_STATUS_HISTORY (PAYMENT_ID);
 
 COMMIT;
