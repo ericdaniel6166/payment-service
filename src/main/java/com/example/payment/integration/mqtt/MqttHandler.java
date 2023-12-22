@@ -1,4 +1,4 @@
-package com.example.payment.config;
+package com.example.payment.integration.mqtt;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
