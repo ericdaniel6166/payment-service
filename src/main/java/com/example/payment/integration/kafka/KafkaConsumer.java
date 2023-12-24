@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class KafkaConsumer {
 
-    final ModelMapper modelMapper;
-    final PaymentService paymentService;
+    ModelMapper modelMapper;
+    PaymentService paymentService;
 
 
     @KafkaListener(topics = "${spring.kafka.consumers.order-processing.topic-name}",

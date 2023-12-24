@@ -28,14 +28,14 @@ import java.math.BigDecimal;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PaymentServiceImpl implements PaymentService {
 
-    final PaymentRepository paymentRepository;
-    final PaymentStatusHistoryRepository paymentStatusHistoryRepository;
-    final KafkaTemplate<String, Object> kafkaTemplate;
-    final KafkaProducerProperties kafkaProducerProperties;
-    final ObjectMapper objectMapper;
+    PaymentRepository paymentRepository;
+    PaymentStatusHistoryRepository paymentStatusHistoryRepository;
+    KafkaTemplate<String, Object> kafkaTemplate;
+    KafkaProducerProperties kafkaProducerProperties;
+    ObjectMapper objectMapper;
 
     @Transactional
     @Override
