@@ -4,7 +4,9 @@ import com.example.payment.dto.OrderProcessingRequest;
 import com.example.payment.dto.OrderProcessingResponse;
 import com.example.payment.service.PaymentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PaymentApi {
 
-    final PaymentService paymentService;
+    PaymentService paymentService;
 
     @GetMapping("/test")
     public ResponseEntity<String> test() {
