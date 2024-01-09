@@ -4,6 +4,8 @@ import com.example.payment.dto.OrderProcessingRequest;
 import com.example.payment.dto.OrderProcessingResponse;
 import com.example.payment.service.PaymentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,6 +30,7 @@ public class PaymentApi {
         return ResponseEntity.ok("test");
     }
 
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/handle-order-processing-open-feign")
     public ResponseEntity<OrderProcessingResponse> handleOrderProcessingOpenFeign(@RequestBody OrderProcessingRequest request) throws JsonProcessingException {
         log.info("handleOrderProcessingOpenFeign, orderId {}", request.getOrderId());
